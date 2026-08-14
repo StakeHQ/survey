@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Survey · Better loans for the team</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1b2a41;
+    --paper:#fafaf8;
+    --card:#ffffff;
+    --green:#0e7a5f;
+    --green-soft:#e6f2ee;
+    --line:#e4e2dc;
+    --muted:#6b7280;
+    --gold:#c89b3c;
+    --radius:14px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto}
+    *,*::before,*::after{animation:none!important;transition:none!important}
+  }
+  body{
+    font-family:'Manrope',system-ui,-apple-system,sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+    line-height:1.55;
+    font-size:16px;
+    -webkit-font-smoothing:antialiased;
+  }
+  .progress-wrap{
+    position:sticky;top:0;z-index:10;
+    background:var(--paper);
+    border-bottom:1px solid var(--line);
+  }
+  .progress-inner{
+    max-width:640px;margin:0 auto;padding:10px 20px;
+    display:flex;align-items:center;gap:12px;
+  }
+  .progress-track{
+    flex:1;height:6px;background:var(--line);border-radius:3px;overflow:hidden;
+  }
+  .progress-fill{
+    height:100%;width:0%;background:var(--green);border-radius:3px;
+    transition:width .35s ease;
+  }
+  .progress-label{
+    font-size:12px;font-weight:700;color:var(--muted);
+    min-width:34px;text-align:right;font-variant-numeric:tabular-nums;
+  }
+  .lang-toggle{
+    display:flex;gap:2px;background:var(--line);border-radius:9px;padding:2px;
+  }
+  .lang-toggle button{
+    border:none;background:transparent;cursor:pointer;
+    font:inherit;font-size:12px;font-weight:700;color:var(--muted);
+    padding:4px 9px;border-radius:7px;
+  }
+  .lang-toggle button.active{background:#fff;color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+  .lang-toggle button:focus-visible{outline:3px solid rgba(14,122,95,.35)}
+  main{max-width:640px;margin:0 auto;padding:36px 20px 80px}
+  .eyebrow{
+    display:inline-block;font-size:12px;font-weight:700;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--green);margin-bottom:10px;
+  }
+  h1{
+    font-family:'Fraunces',Georgia,serif;font-weight:600;
+    font-size:clamp(26px,5.5vw,34px);line-height:1.2;margin-bottom:14px;
+  }
+  .intro{color:var(--ink);margin-bottom:8px}
+  .confidential{
+    background:var(--green-soft);border-left:3px solid var(--green);
+    border-radius:0 10px 10px 0;
+    padding:12px 16px;margin:18px 0 8px;font-size:14.5px;
+  }
+  .section-head{
+    margin:44px 0 6px;
+    display:flex;align-items:baseline;gap:10px;
+  }
+  .section-head .num{
+    font-family:'Fraunces',Georgia,serif;font-size:15px;color:var(--gold);font-weight:600;
+  }
+  .section-head .name{
+    font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+  }
+  .section-rule{height:1px;background:var(--line);margin-bottom:22px}
+  fieldset{border:none;margin:0 0 30px}
+  legend{
+    font-weight:700;font-size:17px;line-height:1.4;margin-bottom:4px;padding:0;
+  }
+  .hint{font-size:14px;color:var(--muted);margin-bottom:12px}
+  legend + .options, legend + .hint + .options{margin-top:12px}
+  .options{display:grid;gap:9px}
+  .opt{
+    position:relative;display:block;cursor:pointer;
+    background:var(--card);border:1.5px solid var(--line);border-radius:var(--radius);
+    padding:13px 16px 13px 46px;font-size:15.5px;
+    transition:border-color .15s ease, background .15s ease;
+    user-select:none;
+  }
+  .opt:hover{border-color:#c9c6bd}
+  .opt input{position:absolute;opacity:0;pointer-events:none}
+  .opt .mark{
+    position:absolute;left:15px;top:50%;transform:translateY(-50%);
+    width:19px;height:19px;border-radius:50%;
+    border:2px solid #b9b6ad;background:#fff;
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .opt input[type="checkbox"] + .mark{border-radius:6px}
+  .opt .mark::after{
+    content:"";position:absolute;inset:0;margin:auto;
+    width:9px;height:9px;border-radius:50%;background:#fff;
+    transform:scale(0);transition:transform .15s ease;
+  }
+  .opt input[type="checkbox"] + .mark::after{
+    width:10px;height:10px;border-radius:2px;
+    background:no-repeat center/contain url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>');
+  }
+  .opt input:checked ~ .mark{border-color:var(--green);background:var(--green)}
+  .opt input:checked ~ .mark::after{transform:scale(1)}
+  .opt:has(input:checked){border-color:var(--green);background:var(--green-soft)}
+  .opt input:focus-visible ~ .mark{outline:3px solid rgba(14,122,95,.35);outline-offset:2px}
+  .branch{
+    display:none;
+    margin:-12px 0 30px;
+    padding:18px 18px 6px;
+    border-left:3px solid var(--green-soft);
+  }
+  .branch.visible{display:block}
+  .offer{
+    background:var(--card);border:1.5px solid var(--line);border-radius:var(--radius);
+    padding:20px 22px;margin:0 0 26px;
+  }
+  .offer p{font-size:15.5px}
+  .offer p + p{margin-top:12px}
+  .offer strong{color:var(--green)}
+  input[type="text"], input[type="email"], textarea{
+    width:100%;background:var(--card);border:1.5px solid var(--line);
+    border-radius:var(--radius);padding:13px 16px;font:inherit;font-size:15.5px;color:var(--ink);
+  }
+  input[type="text"]:focus, input[type="email"]:focus, textarea:focus{outline:3px solid rgba(14,122,95,.25);border-color:var(--green)}
+  textarea{min-height:96px;resize:vertical}
+  .amount-label{font-weight:700;font-size:15px;margin:16px 0 10px}
+  .two-col{display:grid;gap:16px}
+  @media (min-width:520px){.two-col{grid-template-columns:1fr 1fr}}
+  .error{
+    display:none;color:#b3261e;font-size:14px;font-weight:600;margin-top:8px;
+  }
+  fieldset.invalid .error{display:block}
+  fieldset.invalid legend{color:#b3261e}
+  .submit-row{margin-top:36px}
+  button[type="submit"]{
+    width:100%;background:var(--green);color:#fff;border:none;cursor:pointer;
+    font:inherit;font-weight:700;font-size:16.5px;
+    padding:16px;border-radius:var(--radius);
+    transition:background .15s ease, transform .1s ease;
+  }
+  button[type="submit"]:hover{background:#0b6a52}
+  button[type="submit"]:active{transform:scale(.99)}
+  button[type="submit"]:disabled{background:#9db8b0;cursor:default}
+  button[type="submit"]:focus-visible{outline:3px solid rgba(14,122,95,.35);outline-offset:2px}
+  .fineprint{font-size:13px;color:var(--muted);text-align:center;margin-top:14px}
+  .success{display:none;text-align:center;padding:70px 10px}
+  .success.visible{display:block}
+  .success .check{
+    width:64px;height:64px;margin:0 auto 22px;border-radius:50%;
+    background:var(--green);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .success .check svg{width:30px;height:30px}
+  .success h2{font-family:'Fraunces',Georgia,serif;font-weight:600;font-size:26px;margin-bottom:10px}
+  .success p{color:var(--muted);max-width:400px;margin:0 auto}
+  .hp{position:absolute;left:-9999px;top:-9999px;height:0;overflow:hidden}
+</style>
+</head>
+<body>
+
+<div class="progress-wrap" id="progressWrap">
+  <div class="progress-inner">
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-label" id="progressLabel">0%</div>
+    <div class="lang-toggle" role="group" aria-label="Language / Idioma">
+      <button type="button" id="btnEn" class="active">EN</button>
+      <button type="button" id="btnEs">ES</button>
+      <button type="button" id="btnPt">PT</button>
+    </div>
+  </div>
+</div>
+
+<main>
+  <div id="formView">
+    <span class="eyebrow" id="eyebrow"></span>
+    <h1 data-i18n="h1"></h1>
+    <p class="intro" data-i18n="intro"></p>
+    <div class="confidential" data-i18n-html="confid"></div>
+
+    <form id="survey" novalidate>
+      <!-- honeypot -->
+      <div class="hp" aria-hidden="true">
+        <label>Leave this empty<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+      </div>
+
+      <div class="section-head"><span class="num">I</span><span class="name" data-i18n="s1"></span></div>
+      <div class="section-rule"></div>
+
+      <fieldset data-required data-name="role_type">
+        <legend data-i18n="q_role"></legend>
+        <div class="options">
+          <label class="opt"><input type="radio" name="role_type" value="Core/admin team"><span class="mark"></span><span data-i18n="ro1"></span></label>
+          <label class="opt"><input type="radio" name="role_type" value="Contractor"><span class="mark"></span><span data-i18n="ro2"></span></label>
+        </div>
+        <p class="error" data-i18n="err_select"></p>
+      </fieldset>
+
+      <fieldset data-required data-name="country">
+        <legend data-i18n="q_country"></legend>
+        <div class="options">
+          <label class="opt"><input type="radio" name="country" value="Brazil"><span class="mark"></span><span data-i18n="co1"></span></label>
+          <label class="opt"><input type="radio" name="country" value="Colombia"><span class="mark"></span><span data-i18n="co2"></span></label>
+          <label class="opt"><input type="radio" name="country" value="Mexico"><span class="mark"></span><span data-i18n="co3"></span></label>
+          <label class="opt"><input type="radio" name="country" value="Argentina"><span class="mark"></span><span data-i18n="co4"></span></label>
+          <label class="opt"><input type="radio" name="country" value="Dominican Republic"><span class="mark"></span><span data-i18n="co5"></span></label>
+          <label class="opt"><input type="radio" name="country" value="Other"><span class="mark"></span><span data-i18n="co6"></span></label>
+        </div>
+        <p class="error" data-i18n="err_select"></p>
+      </fieldset>
+
+
+      <div class="section-head"><span class="num">II</span><span class="name" data-i18n="s2"></span></div>
+      <div class="section-rule"></div>
+
+      <fieldset data-required data-name="credit_applied">
+        <legend data-i18n="q_loanapp"></legend>
+        <p class="hint" data-i18n="hint_loanapp"></p>
+        <div class="options">
+          <label class="opt"><input type="radio" name="credit_applied" value="Applied and got it"><span class="mark"></span><span data-i18n="cr1"></span></label>
+          <label class="opt"><input type="radio" name="credit_applied" value="Applied but denied"><span class="mark"></span><span data-i18n="cr2"></span></label>
+          <label class="opt"><input type="radio" name="credit_applied" value="Needed it but didn't apply"><span class="mark"></span><span data-i18n="cr4"></span></label>
+          <label class="opt"><input type="radio" name="credit_applied" value="Didn't need it"><span class="mark"></span><span data-i18n="cr3"></span></label>
+        </div>
+        <p class="error" data-i18n="err_select"></p>
+      </fieldset>
+
+      <div class="branch" id="loanBranch">
+        <fieldset data-name="interest_rate" data-branch-required>
+          <legend data-i18n="q_rate"></legend>
+          <p class="hint" data-i18n="hint_rate"></p>
+          <div class="options">
+            <label class="opt"><input type="radio" name="interest_rate" value="Under 15%"><span class="mark"></span><span data-i18n="r1"></span></label>
+            <label class="opt"><input type="radio" name="interest_rate" value="15-20%"><span class="mark"></span><span data-i18n="r2"></span></label>
+            <label class="opt"><input type="radio" name="interest_rate" value="20-30%"><span class="mark"></span><span data-i18n="r3"></span></label>
+            <label class="opt"><input type="radio" name="interest_rate" value="Over 30%"><span class="mark"></span><span data-i18n="r4"></span></label>
+            <label class="opt"><input type="radio" name="interest_rate" value="Not sure"><span class="mark"></span><span data-i18n="r5"></span></label>
+          </div>
+          <p class="error" data-i18n="err_select"></p>
+        </fieldset>
+
+
+      </div>
+
+      <fieldset data-required data-name="usd_income_barrier">
+        <legend data-i18n="q_barrier"></legend>
+        <p class="hint" data-i18n="hint_barrier"></p>
+        <div class="options">
+          <label class="opt"><input type="radio" name="usd_income_barrier" value="Yes, often"><span class="mark"></span><span data-i18n="b1"></span></label>
+          <label class="opt"><input type="radio" name="usd_income_barrier" value="Yes, once or twice"><span class="mark"></span><span data-i18n="b2"></span></label>
+          <label class="opt"><input type="radio" name="usd_income_barrier" value="No"><span class="mark"></span><span data-i18n="b3"></span></label>
+          <label class="opt"><input type="radio" name="usd_income_barrier" value="Never tried"><span class="mark"></span><span data-i18n="b4"></span></label>
+        </div>
+        <p class="error" data-i18n="err_select"></p>
+      </fieldset>
+
+      <fieldset data-required data-name="employer_advance">
+        <legend data-i18n="q_advance"></legend>
+        <div class="options">
+          <label class="opt"><input type="radio" name="employer_advance" value="Yes, and I received it"><span class="mark"></span><span data-i18n="ad1"></span></label>
+          <label class="opt"><input type="radio" name="employer_advance" value="Yes, but it wasn't available"><span class="mark"></span><span data-i18n="ad2"></span></label>
+          <label class="opt"><input type="radio" name="employer_advance" value="No, but I've thought about it"><span class="mark"></span><span data-i18n="ad3"></span></label>
+          <label class="opt"><input type="radio" name="employer_advance" value="No, never needed to"><span class="mark"></span><span data-i18n="ad4"></span></label>
+        </div>
+        <p class="error" data-i18n="err_select"></p>
+      </fieldset>
+
+      <div class="section-head"><span class="num">III</span><span class="name" data-i18n="s3"></span></div>
+      <div class="section-rule"></div>
+
+      <div class="offer">
+        <p data-i18n-html="offer1"></p>
+        <p data-i18n-html="offer2"></p>
+      </div>
+
+      <fieldset data-required data-name="interest_level">
+        <legend data-i18n="q_interest"></legend>
+        <div class="options">
+          <label class="opt"><input type="radio" name="interest_level" value="Would use ASAP"><span class="mark"></span><span data-i18n="i1"></span></label>
+          <label class="opt"><input type="radio" name="interest_level" value="Within a year"><span class="mark"></span><span data-i18n="i2"></span></label>
+          <label class="opt"><input type="radio" name="interest_level" value="Maybe someday"><span class="mark"></span><span data-i18n="i3"></span></label>
+          <label class="opt"><input type="radio" name="interest_level" value="Not interested"><span class="mark"></span><span data-i18n="i4"></span></label>
+        </div>
+        <p class="error" data-i18n="err_select"></p>
+      </fieldset>
+
+      <fieldset data-required data-name="loan_amount">
+        <legend data-i18n="q_amount"></legend>
+        <p class="hint" data-i18n="hint_amount"></p>
+        <div class="options">
+          <label class="opt"><input type="radio" name="loan_amount" value="Under $2,000"><span class="mark"></span><span data-i18n="a1"></span></label>
+          <label class="opt"><input type="radio" name="loan_amount" value="$2,000-$5,000"><span class="mark"></span><span data-i18n="a2"></span></label>
+          <label class="opt"><input type="radio" name="loan_amount" value="$5,000-$10,000"><span class="mark"></span><span data-i18n="a3"></span></label>
+          <label class="opt"><input type="radio" name="loan_amount" value="Over $10,000"><span class="mark"></span><span data-i18n="a4"></span></label>
+          <label class="opt"><input type="radio" name="loan_amount" value="Wouldn't borrow"><span class="mark"></span><span data-i18n="a5"></span></label>
+        </div>
+        <p class="error" data-i18n="err_select"></p>
+      </fieldset>
+
+      <fieldset data-name="loan_purpose">
+        <legend data-i18n="q_purpose"></legend>
+        <p class="hint" data-i18n="hint_purpose"></p>
+        <div class="options">
+          <label class="opt"><input type="checkbox" name="loan_purpose" value="Refinance debt"><span class="mark"></span><span data-i18n="p1"></span></label>
+          <label class="opt"><input type="checkbox" name="loan_purpose" value="Car"><span class="mark"></span><span data-i18n="p2"></span></label>
+          <label class="opt"><input type="checkbox" name="loan_purpose" value="Home/property"><span class="mark"></span><span data-i18n="p3"></span></label>
+          <label class="opt"><input type="checkbox" name="loan_purpose" value="Family expense"><span class="mark"></span><span data-i18n="p4"></span></label>
+          <label class="opt"><input type="checkbox" name="loan_purpose" value="Education"><span class="mark"></span><span data-i18n="p5"></span></label>
+          <label class="opt"><input type="checkbox" name="loan_purpose" value="Business/investment"><span class="mark"></span><span data-i18n="p6"></span></label>
+          <label class="opt"><input type="checkbox" name="loan_purpose" value="Other"><span class="mark"></span><span data-i18n="p7"></span></label>
+        </div>
+      </fieldset>
+
+
+      <fieldset data-required data-name="auto_deduction">
+        <legend data-i18n="q_deduct"></legend>
+        <div class="options">
+          <label class="opt"><input type="radio" name="auto_deduction" value="Prefer it"><span class="mark"></span><span data-i18n="d1"></span></label>
+          <label class="opt"><input type="radio" name="auto_deduction" value="Fine with it"><span class="mark"></span><span data-i18n="d2"></span></label>
+          <label class="opt"><input type="radio" name="auto_deduction" value="Somewhat uncomfortable"><span class="mark"></span><span data-i18n="d3"></span></label>
+          <label class="opt"><input type="radio" name="auto_deduction" value="Would not accept"><span class="mark"></span><span data-i18n="d4"></span></label>
+        </div>
+        <p class="error" data-i18n="err_select"></p>
+      </fieldset>
+
+
+      <div class="section-head"><span class="num">IV</span><span class="name" data-i18n="s4"></span></div>
+      <div class="section-rule"></div>
+
+      <div class="offer">
+        <p data-i18n-html="reveal1"></p>
+        <p data-i18n-html="reveal2"></p>
+      </div>
+
+      <fieldset data-required data-name="stablecoin_familiarity">
+        <legend data-i18n="q_fam"></legend>
+        <div class="options">
+          <label class="opt"><input type="radio" name="stablecoin_familiarity" value="Already use them"><span class="mark"></span><span data-i18n="fa1"></span></label>
+          <label class="opt"><input type="radio" name="stablecoin_familiarity" value="Heard of them, never used"><span class="mark"></span><span data-i18n="fa2"></span></label>
+          <label class="opt"><input type="radio" name="stablecoin_familiarity" value="Not familiar"><span class="mark"></span><span data-i18n="fa3"></span></label>
+        </div>
+        <p class="error" data-i18n="err_select"></p>
+      </fieldset>
+
+      <fieldset data-required data-name="switch_willingness">
+        <legend data-i18n="q_switch"></legend>
+        <p class="hint" data-i18n="hint_switch"></p>
+        <div class="options">
+          <label class="opt"><input type="radio" name="switch_willingness" value="Yes, for the lower rate"><span class="mark"></span><span data-i18n="sw1"></span></label>
+          <label class="opt"><input type="radio" name="switch_willingness" value="Yes, and I'd want it even without a loan"><span class="mark"></span><span data-i18n="sw2"></span></label>
+          <label class="opt"><input type="radio" name="switch_willingness" value="Maybe, I'd want to understand it better"><span class="mark"></span><span data-i18n="sw3"></span></label>
+          <label class="opt"><input type="radio" name="switch_willingness" value="No"><span class="mark"></span><span data-i18n="sw4"></span></label>
+        </div>
+        <p class="error" data-i18n="err_select"></p>
+      </fieldset>
+
+      <fieldset data-required data-name="interest_level_post">
+        <legend data-i18n="q_interest2"></legend>
+        <p class="hint" data-i18n="hint_interest2"></p>
+        <div class="options">
+          <label class="opt"><input type="radio" name="interest_level_post" value="Would use ASAP"><span class="mark"></span><span data-i18n="i1"></span></label>
+          <label class="opt"><input type="radio" name="interest_level_post" value="Within a year"><span class="mark"></span><span data-i18n="i2"></span></label>
+          <label class="opt"><input type="radio" name="interest_level_post" value="Maybe someday"><span class="mark"></span><span data-i18n="i3"></span></label>
+          <label class="opt"><input type="radio" name="interest_level_post" value="Not interested"><span class="mark"></span><span data-i18n="i4"></span></label>
+        </div>
+        <p class="error" data-i18n="err_select"></p>
+      </fieldset>
+
+      <div class="section-head"><span class="num">V</span><span class="name" data-i18n="s5"></span></div>
+      <div class="section-rule"></div>
+
+      <fieldset data-required data-name="pilot_optin">
+        <legend data-i18n="q_pilot"></legend>
+        <div class="options">
+          <label class="opt"><input type="radio" name="pilot_optin" value="Yes"><span class="mark"></span><span data-i18n="pl_yes"></span></label>
+          <label class="opt"><input type="radio" name="pilot_optin" value="No"><span class="mark"></span><span data-i18n="pl_no"></span></label>
+        </div>
+        <p class="error" data-i18n="err_select"></p>
+      </fieldset>
+
+      <!-- Contact details only appear for people who asked to be contacted.
+           Everyone else stays anonymous, which is what the intro promises. -->
+      <div class="branch" id="contactBranch">
+        <p class="hint" data-i18n="hint_contact"></p>
+        <div class="two-col">
+          <fieldset data-name="name" data-branch-required>
+            <legend data-i18n="q_name"></legend>
+            <input type="text" name="name" autocomplete="name" data-i18n-ph="ph_name">
+            <p class="error" data-i18n="err_name"></p>
+          </fieldset>
+
+          <fieldset data-name="email" data-branch-required data-validate="email">
+            <legend data-i18n="q_email"></legend>
+            <input type="email" name="email" autocomplete="email" inputmode="email" data-i18n-ph="ph_email">
+            <p class="error" data-i18n="err_email"></p>
+          </fieldset>
+        </div>
+      </div>
+
+      <fieldset data-name="comments">
+        <legend data-i18n="q_comments"></legend>
+        <p class="hint" data-i18n="hint_comments"></p>
+        <textarea name="comments" data-i18n-ph="ph_comments"></textarea>
+      </fieldset>
+
+      <div class="submit-row">
+        <button type="submit" id="submitBtn" data-i18n="submit"></button>
+        <p class="fineprint" data-i18n="fineprint"></p>
+      </div>
+    </form>
+  </div>
+
+  <div class="success" id="successView">
+    <div class="check">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <h2 data-i18n="success_h"></h2>
+    <p data-i18n="success_p"></p>
+  </div>
+</main>
+
+<script>
+(function(){
+  // ============================================================
+  // URL del web app de Apps Script (termina en /exec).
+  // Proyecto SEPARADO del de Sotant: escribe en su propio Sheet.
+  // Al publicar cambios usa Implementar > Administrar implementaciones > lapiz
+  // > Version: Nueva version. Eso conserva esta misma URL.
+  // "Nueva implementacion" genera una URL distinta y hay que actualizarla aqui.
+  // ============================================================
+  var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwU8q2GZuEmEj5wAL_wsBcfudDyNeLhczXmSdIfTEWm0PJGabjlFhbvTEesXCdf9F7A/exec";
+
+  // Company shown in the header and logged with each response.
+  // Override per agency with a URL parameter: survey.html?company=Revelo
+  // Force a language with: ?lang=es  or  ?lang=pt   (default is English)
+  var DEFAULT_COMPANY = "Blue Coding";
+
+  var I18N = {
+    en: {
+      eyebrow: "{c} · Team benefits",
+      h1: "Would a cheaper loan be useful to you?",
+      intro: "Hi. We're looking into a new benefit for the people who work with us: personal loans at a much lower interest rate than banks here normally charge. We haven't built anything yet. We want to know first whether this is actually useful to you.",
+      confid: "About 3 minutes, and your answers are <strong>confidential</strong>. Only the small team looking into this sees them, they don't affect your work with us in any way, and answering doesn't commit you to anything.",
+      s1: "About you", s2: "Loans you've taken", s3: "A cheaper loan", s4: "How the lower rate is possible", s5: "Staying in touch",
+      q_role: "Which best describes your role?",
+      ro1: "Core or admin team member", ro2: "Contractor or freelancer",
+      q_country: "Where do you live?",
+      co1: "Brazil", co2: "Colombia", co3: "Mexico", co4: "Argentina", co5: "Dominican Republic", co6: "Somewhere else",
+      q_loanapp: "In the last 2 years, have you asked a bank or lender in your country for a loan?",
+      hint_loanapp: "Any kind: personal loan, car loan, credit card, financing at a store.",
+      cr1: "Yes, and I got it", cr2: "Yes, but they said no", cr4: "No, but I needed one", cr3: "No, I didn't need one",
+      q_rate: "Roughly what interest rate are you paying on it per year?",
+      hint_rate: "A rough guess is fine. If you don't know, just say so.",
+      r1: "Under 15%", r2: "15% to 20%", r3: "20% to 30%", r4: "Over 30%", r5: "I don't know",
+      q_barrier: "Has it ever been harder to get a loan because you're paid by a company outside your country?",
+      hint_barrier: "For example, a bank not accepting your income or your contract as proof.",
+      b1: "Yes, that happens a lot", b2: "Yes, once or twice", b3: "No", b4: "I've never tried",
+      q_advance: "Have you ever asked the company for an advance on your pay, or a loan?",
+      ad1: "Yes, and I got it", ad2: "Yes, but it wasn't available to me", ad3: "No, but I've thought about it", ad4: "No, I've never needed to",
+      offer1: "Here's what we're considering. <strong>A personal loan in US dollars</strong>, at an interest rate far below what banks in your country charge. No guarantee needed, no car or house on the line, and no co-signer. The years you've spent working with international clients count in your favor instead of against you.",
+      offer2: "The monthly payment comes out of your pay automatically, so there's nothing to remember and nothing to transfer.",
+      q_interest: "How interested would you be?",
+      i1: "I'd use it as soon as it's available", i2: "I'd probably use it within a year", i3: "Maybe someday", i4: "Not interested",
+      q_amount: "How much would you want to borrow?",
+      hint_amount: "Your best guess. This helps us understand what size of loans to offer.",
+      a1: "Under $2,000 USD", a2: "$2,000 to $5,000 USD", a3: "$5,000 to $10,000 USD", a4: "Over $10,000 USD", a5: "I wouldn't borrow",
+      q_purpose: "What would you use it for?",
+      hint_purpose: "Pick as many as you like. Optional.",
+      p1: "Paying off a loan I already have", p2: "A car", p3: "A home or property", p4: "A family expense", p5: "Studies", p6: "A business or investment", p7: "Something else",
+      q_deduct: "The payment would come out of your pay automatically each month. How do you feel about that?",
+      d1: "I'd prefer it, one less thing to remember", d2: "That's fine with me", d3: "It makes me a little uncomfortable", d4: "I wouldn't accept that",
+      reveal1: "Here's how the rate can be so much lower. Your pay would arrive as <strong>digital dollars (stablecoins)</strong>. A digital dollar is always worth exactly one US dollar, it doesn't go up or down. It arrives in an account that belongs to you, usually in minutes instead of days, and you change as much of it as you want into your local currency whenever you want.",
+      reveal2: "Because the loan payment can come out the moment you're paid, the lender takes far less risk, and that's what brings the rate down. <strong>Nothing changes for anyone who doesn't want it</strong>, and this survey doesn't sign you up for anything.",
+      q_fam: "Had you heard of digital dollars (stablecoins) before today?",
+      fa1: "Yes, I already use them", fa2: "I've heard of them but never used them", fa3: "No, this is new to me",
+      q_switch: "Would you be willing to be paid this way to get the lower rate?",
+      hint_switch: "You'd still be able to change it into your local currency whenever you want.",
+      sw1: "Yes, for a rate that much lower", sw2: "Yes, and I'd want to be paid this way even without a loan", sw3: "Maybe, I'd want to understand it better first", sw4: "No",
+      q_interest2: "Knowing all that, how interested are you in the loan?",
+      hint_interest2: "It's fine if your answer is different from before. That's useful for us to know.",
+      q_name: "Your name",
+      ph_name: "First and last name",
+      q_email: "Your email",
+      ph_email: "you@email.com",
+      err_name: "Enter your name to continue.",
+      err_email: "Enter a valid email to continue.",
+      q_pilot: "We may try this out with a small group first. Want to be one of the first to hear about it?",
+      hint_contact: "Only if you said yes above. We use it to contact you about the pilot and nothing else.",
+      pl_yes: "Yes, let me know", pl_no: "No, thanks",
+      q_comments: "Anything else you want to tell us?",
+      hint_comments: "Questions, doubts, or anything we didn't ask. Optional.",
+      ph_comments: "Write here...",
+      submit: "Send answers",
+      sending: "Sending...",
+      fineprint: "Your answers are only used to decide whether to offer this.",
+      err_select: "Select an option to continue.",
+      success_h: "Thank you!",
+      success_p: "We got your answers. If you asked us to, we'll let you know as soon as there's news.",
+      alert_config: "Set the Apps Script URL first (SCRIPT_URL variable in the code).",
+      alert_fail: "We couldn't send your answers. Check your connection and try again."
+    },
+    es: {
+      eyebrow: "{c} · Beneficios para el equipo",
+      h1: "¿Te serviría un préstamo más barato?",
+      intro: "Hola. Estamos evaluando un nuevo beneficio para quienes trabajan con nosotros: préstamos personales con una tasa de interés mucho más baja que la que cobran los bancos aquí. Todavía no hemos construido nada. Primero queremos saber si esto realmente te sirve.",
+      confid: "Toma unos 3 minutos y tus respuestas son <strong>confidenciales</strong>. Solo las ve el equipo pequeño que está evaluando esto, no afectan de ninguna manera tu trabajo con nosotros, y responder no te compromete a nada.",
+      s1: "Sobre ti", s2: "Préstamos que has pedido", s3: "Un préstamo más barato", s4: "Por qué la tasa puede ser tan baja", s5: "Mantenernos en contacto",
+      q_role: "¿Qué describe mejor tu rol?",
+      ro1: "Equipo interno o administrativo", ro2: "Contractor o freelancer",
+      q_country: "¿Dónde vives?",
+      co1: "Brasil", co2: "Colombia", co3: "México", co4: "Argentina", co5: "República Dominicana", co6: "En otro lugar",
+      q_loanapp: "En los últimos 2 años, ¿le has pedido un préstamo a un banco o prestamista en tu país?",
+      hint_loanapp: "De cualquier tipo: préstamo personal, crédito de carro, tarjeta de crédito, financiación en una tienda.",
+      cr1: "Sí, y me lo dieron", cr2: "Sí, pero me dijeron que no", cr4: "No, pero lo necesitaba", cr3: "No, no lo necesité",
+      q_rate: "¿Más o menos qué tasa de interés estás pagando al año?",
+      hint_rate: "Un estimado está bien. Si no sabes, dilo sin problema.",
+      r1: "Menos del 15%", r2: "15% a 20%", r3: "20% a 30%", r4: "Más del 30%", r5: "No sé",
+      q_barrier: "¿Alguna vez te ha costado más conseguir un préstamo porque te paga una empresa de otro país?",
+      hint_barrier: "Por ejemplo, que el banco no acepte tu ingreso o tu contrato como soporte.",
+      b1: "Sí, pasa mucho", b2: "Sí, una o dos veces", b3: "No", b4: "Nunca lo he intentado",
+      q_advance: "¿Alguna vez le has pedido a la empresa un adelanto de tu pago, o un préstamo?",
+      ad1: "Sí, y me lo dieron", ad2: "Sí, pero no estaba disponible para mí", ad3: "No, pero lo he pensado", ad4: "No, nunca lo he necesitado",
+      offer1: "Esto es lo que estamos evaluando. <strong>Un préstamo personal en dólares</strong>, con una tasa de interés muy por debajo de la que cobran los bancos en tu país. Sin garantías, sin poner tu carro ni tu casa, y sin codeudor. Los años que llevas trabajando con clientes internacionales juegan a tu favor en lugar de en tu contra.",
+      offer2: "La cuota mensual sale de tu pago automáticamente, así que no hay nada que recordar ni nada que transferir.",
+      q_interest: "¿Qué tan interesado(a) estarías?",
+      i1: "Lo usaría apenas esté disponible", i2: "Probablemente lo usaría dentro de un año", i3: "Tal vez algún día", i4: "No me interesa",
+      q_amount: "¿Cuánto te gustaría pedir prestado?",
+      hint_amount: "Tu mejor estimado. Esto nos ayuda a entender de qué tamaño ofrecer los préstamos.",
+      a1: "Menos de $2.000 USD", a2: "$2.000 a $5.000 USD", a3: "$5.000 a $10.000 USD", a4: "Más de $10.000 USD", a5: "No pediría prestado",
+      q_purpose: "¿Para qué lo usarías?",
+      hint_purpose: "Marca las que quieras. Opcional.",
+      p1: "Pagar un préstamo que ya tengo", p2: "Un carro", p3: "Una vivienda o propiedad", p4: "Un gasto familiar", p5: "Estudios", p6: "Un negocio o inversión", p7: "Otra cosa",
+      q_deduct: "La cuota saldría de tu pago automáticamente cada mes. ¿Cómo te sientes con eso?",
+      d1: "Lo prefiero, una cosa menos que recordar", d2: "Me parece bien", d3: "Me incomoda un poco", d4: "No lo aceptaría",
+      reveal1: "Así es como la tasa puede ser tanto más baja. Tu pago llegaría en <strong>dólares digitales (stablecoins)</strong>. Un dólar digital siempre vale exactamente un dólar estadounidense, no sube ni baja. Llega a una cuenta que es tuya, normalmente en minutos en lugar de días, y cambias a tu moneda local lo que quieras, cuando quieras.",
+      reveal2: "Como la cuota puede salir en el momento en que te pagan, el prestamista corre mucho menos riesgo, y eso es lo que hace bajar la tasa. <strong>Nada cambia para quien no lo quiera</strong>, y esta encuesta no te inscribe en nada.",
+      q_fam: "¿Habías oído hablar de los dólares digitales (stablecoins) antes de hoy?",
+      fa1: "Sí, ya los uso", fa2: "He oído de ellos pero nunca los he usado", fa3: "No, esto es nuevo para mí",
+      q_switch: "¿Estarías dispuesto(a) a recibir tu pago así para obtener la tasa más baja?",
+      hint_switch: "Igual podrías cambiarlo a tu moneda local cuando quieras.",
+      sw1: "Sí, por una tasa tanto más baja", sw2: "Sí, y me gustaría recibir mi pago así incluso sin préstamo", sw3: "Tal vez, primero querría entenderlo mejor", sw4: "No",
+      q_interest2: "Sabiendo todo eso, ¿qué tan interesado(a) estás en el préstamo?",
+      hint_interest2: "Está bien si tu respuesta es distinta a la de antes. Nos sirve saberlo.",
+      q_name: "Tu nombre",
+      ph_name: "Nombre y apellido",
+      q_email: "Tu correo",
+      ph_email: "tu@correo.com",
+      err_name: "Escribe tu nombre para continuar.",
+      err_email: "Escribe un correo válido para continuar.",
+      q_pilot: "Es posible que lo probemos primero con un grupo pequeño. ¿Quieres ser de los primeros en enterarte?",
+      hint_contact: "Solo si respondiste que sí arriba. Lo usamos para contactarte sobre el piloto y nada más.",
+      pl_yes: "Sí, avísenme", pl_no: "No, gracias",
+      q_comments: "¿Algo más que quieras contarnos?",
+      hint_comments: "Preguntas, dudas o cualquier cosa que no hayamos preguntado. Opcional.",
+      ph_comments: "Escribe aquí...",
+      submit: "Enviar respuestas",
+      sending: "Enviando...",
+      fineprint: "Tus respuestas se usan únicamente para decidir si ofrecemos esto.",
+      err_select: "Selecciona una opción para continuar.",
+      success_h: "¡Gracias!",
+      success_p: "Recibimos tus respuestas. Si nos lo pediste, te avisamos apenas tengamos novedades.",
+      alert_config: "Configura primero la URL del Apps Script (variable SCRIPT_URL en el código).",
+      alert_fail: "No pudimos enviar tus respuestas. Revisa tu conexión e intenta de nuevo."
+    },
+    pt: {
+      eyebrow: "{c} · Benefícios para o time",
+      h1: "Um empréstimo mais barato seria útil para você?",
+      intro: "Olá. Estamos avaliando um novo benefício para quem trabalha com a gente: empréstimos pessoais com uma taxa de juros bem menor do que a que os bancos daqui costumam cobrar. Ainda não construímos nada. Primeiro queremos saber se isso realmente é útil para você.",
+      confid: "Leva cerca de 3 minutos e suas respostas são <strong>confidenciais</strong>. Só a pequena equipe que está avaliando isso as vê, elas não afetam de forma alguma seu trabalho conosco, e responder não compromete você com nada.",
+      s1: "Sobre você", s2: "Empréstimos que você já pegou", s3: "Um empréstimo mais barato", s4: "Por que a taxa pode ser tão menor", s5: "Ficar em contato",
+      q_role: "O que descreve melhor a sua função?",
+      ro1: "Time interno ou administrativo", ro2: "Contractor ou freelancer",
+      q_country: "Onde você mora?",
+      co1: "Brasil", co2: "Colômbia", co3: "México", co4: "Argentina", co5: "República Dominicana", co6: "Em outro lugar",
+      q_loanapp: "Nos últimos 2 anos, você pediu um empréstimo a um banco ou financeira no seu país?",
+      hint_loanapp: "De qualquer tipo: empréstimo pessoal, financiamento de carro, cartão de crédito, crediário em loja.",
+      cr1: "Sim, e consegui", cr2: "Sim, mas negaram", cr4: "Não, mas eu precisava", cr3: "Não, não precisei",
+      q_rate: "Mais ou menos que taxa de juros você está pagando por ano?",
+      hint_rate: "Um chute aproximado está ótimo. Se não souber, pode dizer.",
+      r1: "Menos de 15%", r2: "15% a 20%", r3: "20% a 30%", r4: "Mais de 30%", r5: "Não sei",
+      q_barrier: "Já foi mais difícil conseguir um empréstimo porque você é pago por uma empresa de fora do país?",
+      hint_barrier: "Por exemplo, o banco não aceitar sua renda ou seu contrato como comprovação.",
+      b1: "Sim, acontece bastante", b2: "Sim, uma ou duas vezes", b3: "Não", b4: "Nunca tentei",
+      q_advance: "Você já pediu à empresa um adiantamento do seu pagamento, ou um empréstimo?",
+      ad1: "Sim, e recebi", ad2: "Sim, mas não estava disponível para mim", ad3: "Não, mas já pensei nisso", ad4: "Não, nunca precisei",
+      offer1: "É isto que estamos avaliando. <strong>Um empréstimo pessoal em dólares</strong>, com uma taxa de juros bem abaixo da que os bancos do seu país cobram. Sem garantia, sem colocar seu carro ou sua casa, e sem avalista. Os anos que você trabalha com clientes internacionais contam a seu favor em vez de contra.",
+      offer2: "A parcela mensal sai do seu pagamento automaticamente, então não tem nada para lembrar nem nada para transferir.",
+      q_interest: "Qual seria o seu interesse?",
+      i1: "Usaria assim que estivesse disponível", i2: "Provavelmente usaria dentro de um ano", i3: "Talvez algum dia", i4: "Não tenho interesse",
+      q_amount: "Quanto você gostaria de pegar emprestado?",
+      hint_amount: "Seu melhor palpite. Isso nos ajuda a entender que tamanho de empréstimo oferecer.",
+      a1: "Menos de $2.000 USD", a2: "$2.000 a $5.000 USD", a3: "$5.000 a $10.000 USD", a4: "Mais de $10.000 USD", a5: "Eu não pegaria emprestado",
+      q_purpose: "Para que você usaria?",
+      hint_purpose: "Marque quantas quiser. Opcional.",
+      p1: "Quitar um empréstimo que já tenho", p2: "Um carro", p3: "Uma casa ou imóvel", p4: "Uma despesa da família", p5: "Estudos", p6: "Um negócio ou investimento", p7: "Outra coisa",
+      q_deduct: "A parcela sairia do seu pagamento automaticamente todo mês. O que você acha disso?",
+      d1: "Prefiro assim, uma coisa a menos para lembrar", d2: "Para mim tudo bem", d3: "Me incomoda um pouco", d4: "Eu não aceitaria",
+      reveal1: "É assim que a taxa consegue ser tão menor. Seu pagamento chegaria em <strong>dólares digitais (stablecoins)</strong>. Um dólar digital vale sempre exatamente um dólar americano, não sobe nem desce. Ele chega em uma conta que é sua, normalmente em minutos em vez de dias, e você troca quanto quiser pela sua moeda local, quando quiser.",
+      reveal2: "Como a parcela pode sair no momento em que você é pago, quem empresta corre muito menos risco, e é isso que derruba a taxa. <strong>Nada muda para quem não quiser</strong>, e esta pesquisa não inscreve você em nada.",
+      q_fam: "Você já tinha ouvido falar de dólares digitais (stablecoins) antes de hoje?",
+      fa1: "Sim, já uso", fa2: "Já ouvi falar, mas nunca usei", fa3: "Não, isso é novo para mim",
+      q_switch: "Você aceitaria receber seu pagamento assim para conseguir a taxa menor?",
+      hint_switch: "Você continuaria podendo trocar pela sua moeda local quando quisesse.",
+      sw1: "Sim, por uma taxa tão menor", sw2: "Sim, e eu gostaria de receber assim mesmo sem empréstimo", sw3: "Talvez, eu gostaria de entender melhor primeiro", sw4: "Não",
+      q_interest2: "Sabendo de tudo isso, qual é o seu interesse no empréstimo?",
+      hint_interest2: "Tudo bem se sua resposta for diferente da anterior. É útil para nós saber.",
+      q_name: "Seu nome",
+      ph_name: "Nome e sobrenome",
+      q_email: "Seu e-mail",
+      ph_email: "voce@email.com",
+      err_name: "Escreva seu nome para continuar.",
+      err_email: "Escreva um e-mail válido para continuar.",
+      q_pilot: "É possível que a gente teste primeiro com um grupo pequeno. Quer ser um dos primeiros a saber?",
+      hint_contact: "Só se você respondeu que sim acima. Usamos apenas para falar com você sobre o piloto.",
+      pl_yes: "Sim, me avisem", pl_no: "Não, obrigado",
+      q_comments: "Mais alguma coisa que você queira nos contar?",
+      hint_comments: "Perguntas, dúvidas ou qualquer coisa que não perguntamos. Opcional.",
+      ph_comments: "Escreva aqui...",
+      submit: "Enviar respostas",
+      sending: "Enviando...",
+      fineprint: "Suas respostas são usadas apenas para decidir se vamos oferecer isso.",
+      err_select: "Selecione uma opção para continuar.",
+      success_h: "Obrigado!",
+      success_p: "Recebemos suas respostas. Se você pediu, avisamos assim que houver novidades.",
+      alert_config: "Configure primeiro a URL do Apps Script (variável SCRIPT_URL no código).",
+      alert_fail: "Não conseguimos enviar suas respostas. Verifique sua conexão e tente novamente."
+    }
+  };
+
+  var qs = new URLSearchParams(window.location.search);
+  var company = (qs.get('company') || qs.get('c') || DEFAULT_COMPANY).slice(0, 60);
+  var urlLang = (qs.get('lang') || '').toLowerCase();
+  var lang = (urlLang === 'es' || urlLang === 'pt') ? urlLang : 'en';
+
+  var form = document.getElementById('survey');
+  var loanBranch = document.getElementById('loanBranch');
+  var contactBranch = document.getElementById('contactBranch');
+  var progressFill = document.getElementById('progressFill');
+  var progressLabel = document.getElementById('progressLabel');
+  var submitBtn = document.getElementById('submitBtn');
+  var langButtons = { en: document.getElementById('btnEn'), es: document.getElementById('btnEs'), pt: document.getElementById('btnPt') };
+
+  // Fields submitted as multi-select checkboxes, joined with "; " on submit.
+  var MULTI_FIELDS = ['loan_purpose'];
+
+  function t(key){ return I18N[lang][key] || ''; }
+
+  function applyLang(){
+    document.documentElement.lang = lang;
+    document.querySelectorAll('[data-i18n]').forEach(function(el){
+      el.textContent = t(el.getAttribute('data-i18n'));
+    });
+    document.querySelectorAll('[data-i18n-html]').forEach(function(el){
+      el.innerHTML = t(el.getAttribute('data-i18n-html'));
+    });
+    document.querySelectorAll('[data-i18n-ph]').forEach(function(el){
+      el.placeholder = t(el.getAttribute('data-i18n-ph'));
+    });
+    document.getElementById('eyebrow').textContent = t('eyebrow').replace('{c}', company);
+    if (!submitBtn.disabled) submitBtn.textContent = t('submit');
+    Object.keys(langButtons).forEach(function(k){
+      langButtons[k].classList.toggle('active', lang === k);
+    });
+  }
+  Object.keys(langButtons).forEach(function(k){
+    langButtons[k].addEventListener('click', function(){ lang = k; applyLang(); });
+  });
+
+  function branchVisible(el){ return el.classList.contains('visible'); }
+
+  function requiredFieldsets(){
+    var list = Array.prototype.slice.call(form.querySelectorAll('fieldset[data-required]'));
+    [loanBranch, contactBranch].forEach(function(b){
+      if (branchVisible(b)) {
+        list = list.concat(Array.prototype.slice.call(b.querySelectorAll('fieldset[data-branch-required]')));
+      }
+    });
+    return list;
+  }
+
+  function fieldsetAnswered(fs){
+    if (fs.hasAttribute('data-multi')) {
+      return fs.querySelectorAll('input[type="checkbox"]:checked').length > 0;
+    }
+    var radios = fs.querySelectorAll('input[type="radio"]');
+    if (radios.length) {
+      for (var i=0;i<radios.length;i++){ if (radios[i].checked) return true; }
+      return false;
+    }
+    var text = fs.querySelector('input[type="text"], input[type="email"], textarea');
+    if (text) {
+      if (!text.value.trim()) return false;
+      if (fs.getAttribute('data-validate') === 'email') {
+        return /^\S+@\S+\.\S+$/.test(text.value.trim());
+      }
+      return true;
+    }
+    return true;
+  }
+
+  function updateProgress(){
+    var fsets = requiredFieldsets();
+    var done = fsets.filter(fieldsetAnswered).length;
+    var pct = fsets.length ? Math.round(done / fsets.length * 100) : 0;
+    progressFill.style.width = pct + '%';
+    progressLabel.textContent = pct + '%';
+  }
+
+  function toggleBranch(branch, show){
+    branch.classList.toggle('visible', show);
+    if (show) return;
+    branch.querySelectorAll('input').forEach(function(i){
+      if (i.type === 'radio' || i.type === 'checkbox') i.checked = false;
+      else i.value = '';
+    });
+    branch.querySelectorAll('fieldset').forEach(function(f){ f.classList.remove('invalid'); });
+  }
+
+  form.addEventListener('change', function(e){
+    var el = e.target;
+    if (el.name === 'credit_applied') {
+      toggleBranch(loanBranch, el.value === 'Applied and got it');
+    }
+    if (el.name === 'pilot_optin') {
+      toggleBranch(contactBranch, el.value === 'Yes');
+    }
+    var fs = el.closest('fieldset');
+    if (fs) fs.classList.remove('invalid');
+    updateProgress();
+  });
+  form.addEventListener('input', function(e){
+    var fs = e.target.closest('fieldset');
+    if (fs) fs.classList.remove('invalid');
+    updateProgress();
+  });
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+
+    // honeypot: silently accept
+    if (form.website && form.website.value) { showSuccess(); return; }
+
+    var fsets = requiredFieldsets();
+    var firstInvalid = null;
+    fsets.forEach(function(fs){
+      var ok = fieldsetAnswered(fs);
+      fs.classList.toggle('invalid', !ok);
+      if (!ok && !firstInvalid) firstInvalid = fs;
+    });
+    if (firstInvalid) {
+      firstInvalid.scrollIntoView({behavior:'smooth', block:'center'});
+      return;
+    }
+
+    var fd = new FormData(form);
+    var params = new URLSearchParams();
+    var multi = {};
+    MULTI_FIELDS.forEach(function(k){ multi[k] = []; });
+    fd.forEach(function(value, key){
+      if (key === 'website') return;
+      if (MULTI_FIELDS.indexOf(key) !== -1) { multi[key].push(value); return; }
+      params.append(key, value);
+    });
+    MULTI_FIELDS.forEach(function(k){ params.append(k, multi[k].join('; ')); });
+    if (!branchVisible(loanBranch)) { params.set('interest_rate',''); }
+    if (!branchVisible(contactBranch)) { params.set('name',''); params.set('email',''); }
+    params.append('language', lang);
+    params.append('company', company);
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = t('sending');
+
+    if (SCRIPT_URL.indexOf('PASTE_YOUR') === 0) {
+      alert(t('alert_config'));
+      submitBtn.disabled = false;
+      submitBtn.textContent = t('submit');
+      return;
+    }
+
+    // mode:'cors' (not 'no-cors'): Apps Script returns Access-Control-Allow-Origin: *
+    // on both the 302 and the final response, so we can read the real result and
+    // show an error instead of faking success when the save failed.
+    fetch(SCRIPT_URL, {
+      method: 'POST',
+      mode: 'cors',
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      body: params.toString()
+    }).then(function(res){
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      return res.json();
+    }).then(function(data){
+      if (!data || !data.ok) throw new Error((data && data.error) || 'server error');
+      showSuccess();
+    }).catch(function(){
+      submitBtn.disabled = false;
+      submitBtn.textContent = t('submit');
+      alert(t('alert_fail'));
+    });
+  });
+
+  function showSuccess(){
+    document.getElementById('formView').style.display = 'none';
+    document.querySelector('.progress-wrap').style.display = 'none';
+    document.getElementById('successView').classList.add('visible');
+    window.scrollTo({top:0});
+  }
+
+  applyLang();
+  updateProgress();
+})();
+</script>
+</body>
+</html>
